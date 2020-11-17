@@ -1,18 +1,40 @@
-#include <NTPClient.h>
 #include <Arduino.h>
-// change next line to use with another board/shield
 #include <ESP8266WiFi.h>
-//#include <WiFi.h> // for WiFi shield
-//#include <WiFi101.h> // for WiFi 101 shield or MKR1000
-#include <WiFiUdp.h>
 #include <Config.h>
+//#include <time.h>
+#include <Wire.h>
+//#include <ezTime.h>
 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
+int relaySignalPinA = 15;
+int relaySignalPinB = 16;
+int floatPin = 13;
+
+int currentFloatPin;
+int floatState;
+int lastFloatState;
+
+bool refilling;
+
+unsigned long currentMillis;
+unsigned long lastDebounceTime;
+unsigned long debounceDelay = 50;
+unsigned long refillStart;
+unsigned long killFillAt;
+
+unsigned long maxFillTime = 5000;
+unsigned long canFillAgian = 5000;
+
+//Timezone myTZ;
 
 void setup()
 {
+    /*clear water levels and such by using time greater then   */
     Serial.begin(9600);
+
+    /* #ifndef ESP8266
+    while (!Serial)
+        ; // wait for serial port to connect. Needed for native USB
+#endif */
 
     WiFi.begin(WIFI_SSID, WIFI_PW);
 
@@ -22,14 +44,65 @@ void setup()
         Serial.print(".");
     }
 
-    timeClient.begin();
+    // waitForSync();
+
+    //myTZ.setLocation(F("America/New_York"));
+    //Serial.println(myTZ.dateTime());
+
+    pinMode(relaySignalPinA, OUTPUT);
+    pinMode(relaySignalPinB, OUTPUT);
+    pinMode(floatPin, INPUT);
+    digitalWrite(relaySignalPinA, LOW);
+    refilling = false;
+
+    //configTime(0, 0, "0.north-america.pool.ntp.org");
+    //Serial.println("\nWaiting for time");
 }
 
 void loop()
 {
-    timeClient.update();
+    currentMillis = millis();
 
-    Serial.println(timeClient.getFormattedTime());
+    currentFloatPin = digitalRead(floatPin);
+    Serial.println(currentFloatPin);
 
-    delay(1000);
+    if (currentFloatPin != lastFloatState)
+    {
+        lastDebounceTime = millis();
+    }
+
+    if ((currentMillis - lastDebounceTime) > debounceDelay)
+    {
+        if (currentFloatPin == HIGH && (currentMillis - killFillAt >= canFillAgian))
+        {
+            if (refilling)
+            {
+                if ((currentMillis - refillStart) >= maxFillTime)
+                {
+                    refilling = false;
+                    killFillAt = millis();
+                    digitalWrite(relaySignalPinA, LOW);
+                }
+                else
+                {
+                    refilling = true;
+                    digitalWrite(relaySignalPinA, HIGH);
+                }
+            }
+            else
+            {
+                refilling = true;
+                refillStart = millis();
+                digitalWrite(relaySignalPinA, HIGH);
+            }
+        }
+        else
+        {
+            digitalWrite(relaySignalPinA, LOW);
+            refilling = false;
+        }
+    }
+
+    //Serial.println(myTZ.dateTime("H:i"));
+    lastFloatState = currentFloatPin;
 }
