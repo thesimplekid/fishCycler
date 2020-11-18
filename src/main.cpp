@@ -11,7 +11,7 @@ int currentFloatPin;
 int floatState;
 int lastFloatState;
 
-bool refilling;
+bool refilling = false;
 bool fillingA;
 bool fillingB;
 bool lastFillingAState;
@@ -35,6 +35,90 @@ unsigned long millisecodsToFillB = 10000;
 
 unsigned long maxFillTime = 0;
 unsigned long canFillAgian = 0;
+
+void connectToWifi();
+void getSettings();
+void checkIfNeedRefill();
+unsigned long checkACycle();
+unsigned long checkBCycle();
+void doneFilling(unsigned long elapsedFill, int tankID);
+
+void setup()
+{
+    Serial.begin(9600);
+
+    /* #ifndef ESP8266
+    while (!Serial)
+        ; // wait for serial port to connect. Needed for native USB
+#endif */
+
+    getSettings();
+
+    pinMode(relaySignalPinA, OUTPUT);
+    pinMode(relaySignalPinB, OUTPUT);
+    pinMode(floatPin, INPUT);
+
+    digitalWrite(relaySignalPinA, LOW);
+    digitalWrite(relaySignalPinB, LOW);
+}
+
+void loop()
+{
+
+    if (!WiFi.status() && millis() - triedToConnect > delayForReconnect)
+    {
+        connectToWifi();
+    }
+
+    if (!fillingA)
+    {
+        timeToFillA = checkACycle();
+        if (timeToFillA > 0)
+        {
+            fillingA = true;
+            startedFillingA = millis();
+            digitalWrite(relaySignalPinA, HIGH);
+        }
+        else
+        {
+            checkIfNeedRefill();
+        }
+    }
+    else
+    {
+        unsigned long elapsedFillA = (millis() - startedFillingA);
+        if (elapsedFillA > timeToFillA && lastFillingAState == true)
+        {
+            fillingA = false;
+            digitalWrite(relaySignalPinA, LOW);
+            doneFilling(elapsedFillA, 1);
+        }
+    }
+    if (!fillingB)
+    {
+        timeToFillB = checkBCycle();
+
+        if (timeToFillB > 0)
+        {
+            fillingB = true;
+            startedFillingB = millis();
+            digitalWrite(relaySignalPinB, HIGH);
+        }
+    }
+    else
+    {
+        unsigned long elapsedFillB = (millis() - startedFillingB);
+        if (elapsedFillB > timeToFillB && lastFillingBState == true)
+        {
+            fillingB = false;
+            digitalWrite(relaySignalPinB, LOW);
+            doneFilling(elapsedFillB, 2);
+        }
+    }
+
+    lastFillingAState = fillingA;
+    lastFillingBState = fillingB;
+}
 
 void connectToWifi()
 {
@@ -153,82 +237,4 @@ void doneFilling(unsigned long elapsedFill, int tankID)
     {
         Serial.println("Invalid ID");
     }
-}
-
-void setup()
-{
-    Serial.begin(9600);
-
-    /* #ifndef ESP8266
-    while (!Serial)
-        ; // wait for serial port to connect. Needed for native USB
-#endif */
-
-    getSettings();
-
-    pinMode(relaySignalPinA, OUTPUT);
-    pinMode(relaySignalPinB, OUTPUT);
-    pinMode(floatPin, INPUT);
-
-    digitalWrite(relaySignalPinA, LOW);
-    digitalWrite(relaySignalPinB, LOW);
-    refilling = false;
-}
-
-void loop()
-{
-
-    if (!WiFi.status() && millis() - triedToConnect > delayForReconnect)
-    {
-        connectToWifi();
-    }
-
-    if (!fillingA)
-    {
-        timeToFillA = checkACycle();
-        if (timeToFillA > 0)
-        {
-            fillingA = true;
-            startedFillingA = millis();
-            digitalWrite(relaySignalPinA, HIGH);
-        }
-        else
-        {
-            checkIfNeedRefill();
-        }
-    }
-    else
-    {
-        unsigned long elapsedFillA = (millis() - startedFillingA);
-        if (elapsedFillA > timeToFillA && lastFillingAState == true)
-        {
-            fillingA = false;
-            digitalWrite(relaySignalPinA, LOW);
-            doneFilling(elapsedFillA, 1);
-        }
-    }
-    if (!fillingB)
-    {
-        timeToFillB = checkBCycle();
-
-        if (timeToFillB > 0)
-        {
-            fillingB = true;
-            startedFillingB = millis();
-            digitalWrite(relaySignalPinB, HIGH);
-        }
-    }
-    else
-    {
-        unsigned long elapsedFillB = (millis() - startedFillingB);
-        if (elapsedFillB > timeToFillB && lastFillingBState == true)
-        {
-            fillingB = false;
-            digitalWrite(relaySignalPinB, LOW);
-            doneFilling(elapsedFillB, 2);
-        }
-    }
-
-    lastFillingAState = fillingA;
-    lastFillingBState = fillingB;
 }
