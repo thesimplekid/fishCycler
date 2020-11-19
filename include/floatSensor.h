@@ -8,14 +8,12 @@ public:
     bool checkFloatState();
 
     int floatPin;
-    bool lastFloatState;
 
     floatSensor(char floatIdentityPassed, int floatPinPassed)
     {
         floatIdentity = floatIdentityPassed;
         floatPin = floatPinPassed;
         pinMode(floatPin, INPUT);
-        lastFloatState = checkFloatState();
     }
 };
 

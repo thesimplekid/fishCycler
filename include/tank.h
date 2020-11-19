@@ -19,10 +19,10 @@ public:
 
     bool filling;
 
-    tank(int signalPinPassed, unsigned long millisSeconds, char identity)
+    tank(int signalPinPassed, char identity)
     {
         signalPin = signalPinPassed;
-        cycleFillTime = millisSeconds;
+        cycleFillTime = 0;
         tank_identity = identity;
         filling = false;
         maxFillTime = 3000;
