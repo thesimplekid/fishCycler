@@ -46,11 +46,11 @@ void loop()
     if (lastHour != currentHour)
     {
 
-        if (currentHour == 6 || currentHour == 12 || currentHour == 18 || currentHour == 24)
+        if (currentHour == 6 || currentHour == 12 || currentHour == 18 || currentHour == 0)
         {
             tankA.cycleFillTime = 60000;
         }
-        else if (currentHour == 7 || currentHour == 13 || currentHour == 19 || currentHour == 0)
+        else if (currentHour == 7 || currentHour == 13 || currentHour == 19 || currentHour == 1)
         {
             tankB.cycleFillTime = 60000;
         }
