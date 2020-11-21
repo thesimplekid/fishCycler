@@ -12,21 +12,28 @@ void setup_wifi();
 Timezone myTZ;
 
 int lastHour = 0;
+int tankAPin = 15;
+int tankBPin = 16;
 
 tank tankA(15, 'A'),
     tankB(16, 'B');
-floatSensor floatA('A', 13);
+floatSensor floatA('A', 2);
 
 void setup()
 {
     Serial.begin(9600);
+
+    pinMode(15, OUTPUT);
+    digitalWrite(15, HIGH);
+
+    pinMode(16, OUTPUT);
+    digitalWrite(16, HIGH);
 
     setup_wifi();
 
     waitForSync();
 
     myTZ.setLocation("America/New_York");
-
     /* #ifndef ESP8266
     while (!Serial)
         ; // wait for serial port to connect. Needed for native USB
@@ -35,28 +42,36 @@ void setup()
 
 void loop()
 {
-
+    //Serial.println(digitalRead(15));
+    //Serial.print(floatA.checkFloatState());
+    //if (!tankB.filling)
+    //{
     tankA.checkTank(floatA.checkFloatState());
-    tankB.checkTank();
+    // }
 
+    //if (!tankA.filling)
+    //{
+    tankB.checkTank();
+    //}
+    /* 
     //H for 24 00
-    String test = myTZ.dateTime("H");
-    int currentHour;
-    currentHour = test.toInt();
+    String currentHourString = myTZ.dateTime("H");
+    int currentHour = currentHourString.toInt();
     if (lastHour != currentHour)
     {
 
         if (currentHour == 6 || currentHour == 12 || currentHour == 18 || currentHour == 0)
         {
             tankA.cycleFillTime = 60000;
+            Serial.println("Cycle A");
         }
         else if (currentHour == 7 || currentHour == 13 || currentHour == 19 || currentHour == 1)
         {
             tankB.cycleFillTime = 60000;
+            Serial.println("Cycle B");
         }
-        Serial.println("funning this");
     }
-    lastHour = currentHour;
+    lastHour = currentHour; */
 }
 
 void setup_wifi()
@@ -70,10 +85,13 @@ void setup_wifi()
 
     WiFi.begin(WIFI_SSID, WIFI_PW);
 
-    while (WiFi.status() != WL_CONNECTED)
+    int triedToConnect = 0;
+
+    while (WiFi.status() != WL_CONNECTED && triedToConnect < 20)
     {
         delay(500);
         Serial.print(".");
+        triedToConnect++;
     }
 
     Serial.println("");

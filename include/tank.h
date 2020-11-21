@@ -25,38 +25,38 @@ public:
         cycleFillTime = 0;
         tank_identity = identity;
         filling = false;
-        maxFillTime = 3000;
+        maxFillTime = 300000;
         minDelayBetweenFills = 5000;
 
-        pinMode(signalPin, OUTPUT);
-        digitalWrite(signalPin, LOW);
+        //pinMode(signalPin, OUTPUT);
+        //digitalWrite(signalPin, HIGH);
     }
 };
 
 void tank::startFilling()
 {
-    Serial.print("___Started Filling___:");
+    Serial.print("___Started Filling___: ");
     Serial.println(tank_identity);
 
     fillStartedAt = millis();
     Serial.println(fillStartedAt);
     filling = true;
-    digitalWrite(signalPin, HIGH);
+    digitalWrite(signalPin, LOW);
 }
 
 void tank::doneFilling()
 {
     // TODO - return done to server with elapsed fill to server
     unsigned long elapsedFill = millis() - fillStartedAt;
-    Serial.println("___Done Filling___");
+    Serial.print("___Done Filling___: ");
     Serial.println(tank_identity);
     Serial.println(elapsedFill);
-    Serial.println(millis());
+    //Serial.println(millis());
 
     filling = false;
     lastFillEndedAt = millis();
     cycleFillTime = 0;
-    digitalWrite(signalPin, LOW);
+    digitalWrite(signalPin, HIGH);
 }
 
 void tank::checkTank(bool floatState = false)
@@ -81,10 +81,12 @@ void tank::checkTank(bool floatState = false)
         }
     }
 
-    if (millis() - lastFillEndedAt < 0 || millis() - fillStartedAt < 0)
+    /*  
+   if (millis() - lastFillEndedAt < 0 || millis() - fillStartedAt < 0)
     {
         //TODO - idk if this is really needed
         Serial.println("__overflow check__");
         doneFilling();
-    }
+    } 
+    */
 }
