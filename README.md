@@ -2,7 +2,7 @@
 
 ## About the Project
 
-This project is intened to automate the process of refilling and adding water to fish tanks.  
+This project is intended to automate the process of refilling and adding water to fish tanks.  
 It uses a [adafruit feather Huzzah](https://www.adafruit.com/product/2821) to control two normally closed solenoids.
 
 ## Software
