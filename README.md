@@ -15,10 +15,8 @@ The solenoid is opened by one of two way:
  In this example only tank A has a float switch but it could be added to all if the tanks if desired.
 
 ## Built With
-<ol>
-  <li>[platformIO](https://platformio.org/)</li>
-  <li>[adafruit feather Huzzah](https://www.adafruit.com/product/2821)</li>
-</ol>
+Built using [platformIO](https://platformio.org/) and a [adafruit feather Huzzah](https://www.adafruit.com/product/2821)
+
 
 ## Hardware
 
