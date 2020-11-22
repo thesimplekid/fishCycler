@@ -1,11 +1,10 @@
-#include <Arduino.h>
 class tank
 {
 public:
     char tank_identity;
     void checkTank(bool floatState);
     void startFilling();
-    void doneFilling();
+    void stopFilling();
 
     bool refill(bool floatState);
 
@@ -22,8 +21,9 @@ public:
     tank(int signalPinPassed, char identity)
     {
         signalPin = signalPinPassed;
-        cycleFillTime = 0;
         tank_identity = identity;
+
+        cycleFillTime = 0;
         filling = false;
         maxFillTime = 300000;
         minDelayBetweenFills = 5000;
@@ -44,14 +44,14 @@ void tank::startFilling()
     digitalWrite(signalPin, LOW);
 }
 
-void tank::doneFilling()
+void tank::stopFilling()
 {
     // TODO - return done to server with elapsed fill to server
     unsigned long elapsedFill = millis() - fillStartedAt;
+
     Serial.print("___Done Filling___: ");
     Serial.println(tank_identity);
     Serial.println(elapsedFill);
-    //Serial.println(millis());
 
     filling = false;
     lastFillEndedAt = millis();
@@ -63,15 +63,16 @@ void tank::checkTank(bool floatState = false)
 {
     if (filling)
     {
-        if ((millis() - fillStartedAt < cycleFillTime) || (floatState && ((millis() - fillStartedAt) < maxFillTime)))
+        if (!floatState && (millis() - fillStartedAt > cycleFillTime))
         {
-            //TODO - inverse this and get rid of the if else
+            stopFilling();
         }
-        else
+        else if (floatState && ((millis() - fillStartedAt) > maxFillTime))
         {
-            doneFilling();
+            stopFilling();
         }
     }
+
     else if (millis() - lastFillEndedAt > minDelayBetweenFills)
     {
         //TODO - get cycle time frome server
@@ -81,12 +82,10 @@ void tank::checkTank(bool floatState = false)
         }
     }
 
-    /*  
-   if (millis() - lastFillEndedAt < 0 || millis() - fillStartedAt < 0)
+    if (millis() - lastFillEndedAt < 0 || millis() - fillStartedAt < 0)
     {
         //TODO - idk if this is really needed
         Serial.println("__overflow check__");
-        doneFilling();
-    } 
-    */
+        stopFilling();
+    }
 }

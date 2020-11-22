@@ -1,5 +1,3 @@
-#include <Arduino.h>
-#include <Wire.h>
 
 class floatSensor
 {
@@ -13,6 +11,7 @@ public:
     {
         floatIdentity = floatIdentityPassed;
         floatPin = floatPinPassed;
+
         pinMode(floatPin, INPUT_PULLUP);
     }
 };

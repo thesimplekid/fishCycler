@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <Wire.h>
 #include <ezTime.h>
 
 #include "Config.h"
@@ -10,10 +9,12 @@
 void setup_wifi();
 
 Timezone myTZ;
+
 int lastHour = 0;
 
 tank tankA(13, 'A'),
     tankB(16, 'B');
+
 floatSensor floatA('A', 14);
 
 void setup()
@@ -26,10 +27,6 @@ void setup()
     waitForSync();
 
     myTZ.setLocation("America/New_York");
-    /* #ifndef ESP8266
-    while (!Serial)
-        ; // wait for serial port to connect. Needed for native USB
-#endif */
 }
 
 void loop()
@@ -50,7 +47,6 @@ void loop()
     int currentHour = currentHourString.toInt();
     if (lastHour != currentHour)
     {
-
         if (currentHour == 6 || currentHour == 12 || currentHour == 18 || currentHour == 0)
         {
             tankA.cycleFillTime = 60000;
@@ -61,8 +57,8 @@ void loop()
             tankB.cycleFillTime = 60000;
             Serial.println("Cycle B");
         }
-        Serial.println("here");
     }
+
     lastHour = currentHour;
 }
 
