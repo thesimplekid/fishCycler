@@ -47,12 +47,12 @@ void loop()
     int currentHour = currentHourString.toInt();
     if (lastHour != currentHour)
     {
-        if (currentHour == 6 || currentHour == 12 || currentHour == 18 || currentHour == 0)
+        if (currentHour % 6 == 0)
         {
             tankA.cycleFillTime = 60000;
             Serial.println("Cycle A");
         }
-        else if (currentHour == 7 || currentHour == 13 || currentHour == 19 || currentHour == 1)
+        else if ((currentHour - 1) % 6 == 0)
         {
             tankB.cycleFillTime = 60000;
             Serial.println("Cycle B");
