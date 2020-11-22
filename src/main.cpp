@@ -10,6 +10,7 @@
 void setup_wifi();
 
 Timezone myTZ;
+int lastHour = 0;
 
 tank tankA(13, 'A'),
     tankB(16, 'B');
@@ -53,7 +54,7 @@ void loop()
         tankB.checkTank();
     }
     //H for 24 00
-    /* 
+
     String currentHourString = myTZ.dateTime("H");
     int currentHour = currentHourString.toInt();
     if (lastHour != currentHour)
@@ -72,7 +73,6 @@ void loop()
         Serial.println("here");
     }
     lastHour = currentHour;
-     */
 }
 
 void setup_wifi()
