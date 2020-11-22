@@ -13,7 +13,7 @@ public:
     {
         floatIdentity = floatIdentityPassed;
         floatPin = floatPinPassed;
-        pinMode(floatPin, INPUT);
+        pinMode(floatPin, INPUT_PULLUP);
     }
 };
 

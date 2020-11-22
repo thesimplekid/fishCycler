@@ -14,19 +14,13 @@ int lastHour = 0;
 
 tank tankA(13, 'A'),
     tankB(16, 'B');
-floatSensor floatA('A', 2);
+floatSensor floatA('A', 14);
 
 void setup()
 {
-    /* 
+
     Serial.begin(9600);
 
-    pinMode(13, OUTPUT);
-    digitalWrite(13, HIGH);
-
-    pinMode(16, OUTPUT);
-    digitalWrite(16, HIGH);
- */
     setup_wifi();
 
     waitForSync();
@@ -40,10 +34,7 @@ void setup()
 
 void loop()
 {
-    //digitalWrite(16, HIGH);
-    //digitalWrite(13, HIGH);
-    //Serial.println(digitalRead(15));
-    //Serial.print(floatA.checkFloatState());
+
     if (!tankB.filling)
     {
         tankA.checkTank(floatA.checkFloatState());
@@ -53,8 +44,8 @@ void loop()
     {
         tankB.checkTank();
     }
-    //H for 24 00
 
+    //H for 24 00
     String currentHourString = myTZ.dateTime("H");
     int currentHour = currentHourString.toInt();
     if (lastHour != currentHour)
