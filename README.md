@@ -7,7 +7,7 @@ The soliniod is opened by one of two way:
 <ol>
   <li>A float switch that drops below the set level</li>
   <li>At the set time to cycle the tanks on a schudule</li>
-<ol>
+</ol>
   
  In this example only tank A has a float switch but it could be added to all if the tanks if desired.
 
