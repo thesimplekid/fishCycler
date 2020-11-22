@@ -18,7 +18,7 @@ The solenoid is opened by one of two way:
 
  In order to sync the time with your local time zone the [ezTime library](https://github.com/ropg/ezTime) is used.  This libary needs to be dowloaded and then included on the project.
 
- To connect to WiFi to allow the time synce a Config file needs to be inculded with your WiFi_SSID and Password. An example can be found [here](/include/Config.h)
+ To connect to WiFi to allow the time synce a Config file needs to be inculded with your WiFi_SSID and Password. An example can be found [here](/include/example_Config.h)
 
 
 ## Built With
