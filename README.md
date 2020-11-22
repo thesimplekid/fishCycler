@@ -3,7 +3,7 @@
 ## About the Project
 
 This project is intened to automate the process of refilling and adding water to fish tanks.  
-It uses a [adafruit feather Huzzah] (https://www.adafruit.com/product/2821) to control two normally closed solinoids.
+It uses a [adafruit feather Huzzah](https://www.adafruit.com/product/2821) to control two normally closed solinoids.
 
 The solenoid is opened by one of two way:
 
@@ -17,7 +17,7 @@ The solenoid is opened by one of two way:
 ## Built With
 <ol>
   <li>[platformIO](https://platformio.org/)</li>
-  <li>[adafruit feather Huzzah] (https://www.adafruit.com/product/2821)</li>
+  <li>[adafruit feather Huzzah](https://www.adafruit.com/product/2821)</li>
 </ol>
 
 ## Hardware
