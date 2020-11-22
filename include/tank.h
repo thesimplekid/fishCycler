@@ -28,8 +28,8 @@ public:
         maxFillTime = 300000;
         minDelayBetweenFills = 5000;
 
-        //pinMode(signalPin, OUTPUT);
-        //digitalWrite(signalPin, HIGH);
+        pinMode(signalPin, OUTPUT);
+        digitalWrite(signalPin, HIGH);
     }
 };
 
