@@ -49,6 +49,7 @@ void loop()
     {
         if (currentHour % 6 == 0)
         {
+            //Fill tank for 1 Min
             tankA.cycleFillTime = 60000;
             Serial.println("Cycle A");
         }
@@ -56,6 +57,12 @@ void loop()
         {
             tankB.cycleFillTime = 60000;
             Serial.println("Cycle B");
+        }
+
+        if (WiFi.status() != WL_CONNECTED)
+        {
+            setup_wifi();
+            waitForSync();
         }
     }
 
@@ -66,7 +73,6 @@ void setup_wifi()
 {
 
     delay(10);
-    // We start by connecting to a WiFi network
     Serial.println();
     Serial.print("Connecting to ");
     Serial.println(WIFI_SSID);

@@ -75,7 +75,6 @@ void tank::checkTank(bool floatState = false)
 
     else if (millis() - lastFillEndedAt > minDelayBetweenFills)
     {
-        //TODO - get cycle time frome server
         if (cycleFillTime > 0 || floatState)
         {
             startFilling();
