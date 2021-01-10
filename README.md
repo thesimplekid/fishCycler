@@ -34,4 +34,4 @@ The circut can be seen below and the fritzing file is avalibale for [download](/
 Distributed under the MIT License. See LICENSE for more information.
 
 ## Contact
-Brendan Murphy | www.brendanmurphy.xyz | brendan@thesimplekid.xyz
+Brendan Murphy | www.brendanmurphy.xyz | brendan@thesimplekid.com
